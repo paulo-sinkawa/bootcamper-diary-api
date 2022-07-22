@@ -55,7 +55,7 @@ router.patch("/edit/:postId", isAuth, attachCurrentUser, async (req, res) => {
 router.delete("/delete/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
-    const deletedPost = await PostModel.deletedOne({ _id: postId });
+    const deletedPost = await PostModel.deleteOne({ _id: postId });
 
     return res.status(200).json(deletedPost);
   } catch (err) {
