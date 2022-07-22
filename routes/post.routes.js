@@ -37,12 +37,12 @@ router.get("/my-posts/:id", isAuth, attachCurrentUser, async (req, res) => {
   }
 });
 
-router.patch("/edit/:postId", async (req, res) => {
+router.patch("/edit/:postId", isAuth, attachCurrentUser, async (req, res) => {
   try {
     const { postId } = req.params;
     const editedPost = await PostModel.findOneAndUpdate(
       { _id: postId },
-      { ...body },
+      { ...req.body },
       { new: true, runValidators: true }
     );
     return res.status(200).json(editedPost);
