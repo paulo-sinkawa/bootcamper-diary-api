@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const UserModel = require("../models/User.model");
+const UserModel = require("../models/user.model");
 
 const generateToken = require("../config/jwt.config");
 const isAuth = require("../middlewares/isAuth");
