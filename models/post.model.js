@@ -1,9 +1,9 @@
 const { Schema, Types, model } = require("mongoose");
 
 const postSchema = new Schema({
-  owner: { type: Types.ObjectId, ref: "User" },
+  owner: [{ type: Types.ObjectId, ref: "User" }],
   date: { type: String },
-  content: { type: String, maxLength: 50 },
+  content: { type: String, required: true, maxLength: 200 },
   feeling: {
     type: String,
     enum: [

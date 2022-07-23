@@ -42,7 +42,9 @@ router.get(
   async (req, res) => {
     try {
       const { commentId } = req.params;
-      const myComment = await CommentModel.findOne({ _id: commentId });
+      const myComment = await CommentModel.findOne({
+        _id: commentId,
+      }).populate("post");
       return res.status(200).json(myComment);
     } catch (err) {
       console.error(err);
@@ -51,26 +53,31 @@ router.get(
   }
 );
 
-router.patch("edit/:commentId", isAuth, attachCurrentUser, async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const updtatedComment = await CommentModel.findOneAndUpdate(
-      { _id: commentId },
-      { ...body },
-      { new: true, runValidators: true }
-    );
-    return res.status(200).json(updtatedComment);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json(err);
+router.patch(
+  "/edit/:postId/:commentId",
+  isAuth,
+  attachCurrentUser,
+  async (req, res) => {
+    try {
+      const { commentId } = req.params;
+      const updatedComment = await CommentModel.findOneAndUpdate(
+        { _id: commentId },
+        { ...req.body },
+        { new: true, runValidators: true }
+      );
+      return res.status(200).json(updatedComment);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
   }
-});
+);
 
 router.delete("delete/:commentId", async (req, res) => {
   try {
     const { commentId } = req.params;
     const deletedComment = await CommentModel.deleteOne({
-      _id: req.params.commentId,
+      _id: commentId,
     });
     return res.status(200).json.deletedComment;
   } catch (err) {
