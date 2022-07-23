@@ -41,9 +41,8 @@ router.get(
   attachCurrentUser,
   async (req, res) => {
     try {
-      const myComment = await CommentModel.findOne({ _id: commentId }).populate(
-        "post"
-      );
+      const { commentId } = req.params;
+      const myComment = await CommentModel.findOne({ _id: commentId });
       return res.status(200).json(myComment);
     } catch (err) {
       console.error(err);

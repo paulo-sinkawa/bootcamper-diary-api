@@ -17,7 +17,7 @@ const postSchema = new Schema({
     ],
   },
   creationDate: { type: Date, default: Date.now() },
-  comment: { type: Types.ObjectId, ref: "Comment" },
+  comment: [{ type: Types.ObjectId, ref: "Comment" }],
 });
 
 const PostModel = model("Post", postSchema);
