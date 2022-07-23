@@ -35,24 +35,6 @@ router.get("/all-comments", async (req, res) => {
   }
 });
 
-router.get(
-  "/my-comment/:postId",
-  isAuth,
-  attachCurrentUser,
-  async (req, res) => {
-    try {
-      const { commentId } = req.params;
-      const myComment = await CommentModel.findOne({
-        _id: commentId,
-      }).populate("post");
-      return res.status(200).json(myComment);
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json(err);
-    }
-  }
-);
-
 router.patch(
   "/edit/:postId/:commentId",
   isAuth,
@@ -73,17 +55,22 @@ router.patch(
   }
 );
 
-router.delete("delete/:commentId", async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const deletedComment = await CommentModel.deleteOne({
-      _id: commentId,
-    });
-    return res.status(200).json.deletedComment;
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json(err);
+router.delete(
+  "/delete/:commentId",
+  isAuth,
+  attachCurrentUser,
+  async (req, res) => {
+    try {
+      const { commentId } = req.params;
+      const deletedComment = await CommentModel.deleteOne({
+        _id: commentId,
+      });
+      return res.status(200).json(deletedComment);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
   }
-});
+);
 
 module.exports = router;
