@@ -6,11 +6,6 @@ const PostModel = require("../models/post.model");
 
 router.post("/create/:postId", isAuth, attachCurrentUser, async (req, res) => {
   try {
-    // if (!req.body.post || req.body.post === []) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "O comentário precisa ter um post" });
-    // }
     const { postId } = req.params;
     const createdComment = await CommentModel.create({
       ...req.body,
@@ -30,7 +25,7 @@ router.post("/create/:postId", isAuth, attachCurrentUser, async (req, res) => {
   }
 });
 
-router.get("all-comments", async (req, res) => {
+router.get("/all-comments", async (req, res) => {
   try {
     const getAllComments = await CommentModel.find();
     return res.status(200).json(getAllComments);
