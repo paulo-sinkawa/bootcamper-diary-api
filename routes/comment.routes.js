@@ -1,43 +1,66 @@
 const router = require("express").Router();
+const attachCurrentUser = require("../middlewares/attachCurrentUser");
+const isAuth = require("../middlewares/isAuth");
+const CommentModel = require("../models/comment.model");
 const PostModel = require("../models/post.model");
-const commentModel = require("../models/comment.model");
 
-router.post("/create-comment", async (req, res) => {
+router.post("/create/:postId", isAuth, attachCurrentUser, async (req, res) => {
   try {
-    if (!req.body.post || req.body.post === []) {
-      return res
-        .status(400)
-        .json({ message: "O comentário precisa ter um post" });
-    }
-    const createdComment = await commentModel.create({
+    // if (!req.body.post || req.body.post === []) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "O comentário precisa ter um post" });
+    // }
+    const { postId } = req.params;
+    const createdComment = await CommentModel.create({
       ...req.body,
-      owner: req.currentUser._id,
-      post: req.currentPost._id,
+      post: postId,
     });
 
-    return res.status(201).json(createdComment);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json(err);
-  }
-});
-
-router.get("/my-comment", async (req, res) => {
-  try {
-    const myComment = await ObsModel.findOne({ _id: commentId }).populate(
-      "post"
+    const editedPost = await PostModel.findOneAndUpdate(
+      { _id: postId },
+      { $push: { comment: createdComment._id } },
+      { new: true }
     );
-    return res.status(200).json(myComment);
+
+    return res.status(201).json({ createdComment, editedPost });
   } catch (err) {
     console.error(err);
     return res.status(500).json(err);
   }
 });
 
-router.patch("edit/:commentId", async (req, res) => {
+router.get("all-comments", async (req, res) => {
+  try {
+    const getAllComments = await CommentModel.find();
+    return res.status(200).json(getAllComments);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json(err);
+  }
+});
+
+router.get(
+  "/my-comment/:postId",
+  isAuth,
+  attachCurrentUser,
+  async (req, res) => {
+    try {
+      const myComment = await CommentModel.findOne({ _id: commentId }).populate(
+        "post"
+      );
+      return res.status(200).json(myComment);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+router.patch("edit/:commentId", isAuth, attachCurrentUser, async (req, res) => {
   try {
     const { commentId } = req.params;
-    const updtatedComment = await commentModel.findOneAndUpdate(
+    const updtatedComment = await CommentModel.findOneAndUpdate(
       { _id: commentId },
       { ...body },
       { new: true, runValidators: true }
