@@ -11,8 +11,6 @@ const saltRounds = 10;
 
 router.post("/signup", async (req, res) => {
   try {
-    // Primeira coisa: Criptografar a senha!
-
     const { password } = req.body;
 
     if (!password) {
@@ -87,8 +85,6 @@ router.patch("/update-profile", isAuth, attachCurrentUser, async (req, res) => {
     return res.status(500).json(error);
   }
 });
-
-//SOFT DELETE
 
 router.delete(
   "/disable-profile",
