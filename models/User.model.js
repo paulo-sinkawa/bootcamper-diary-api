@@ -2,7 +2,6 @@ const { Schema, model, Types, default: mongoose } = require("mongoose");
 
 const userSchema = new Schema({
   name: { type: String, required: true, trim: true },
-  // post: [{ type: Types.ObjectId, ref: "Post" }],
   email: {
     type: String,
     required: true,

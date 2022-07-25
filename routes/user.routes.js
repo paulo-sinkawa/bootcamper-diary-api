@@ -77,8 +77,6 @@ router.patch("/update-profile", isAuth, attachCurrentUser, async (req, res) => {
       { runValidators: true, new: true }
     );
 
-    delete updatedUser._doc.passwordHash;
-
     return res.status(200).json(updatedUser);
   } catch (error) {
     console.log(error);
