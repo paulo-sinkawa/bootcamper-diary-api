@@ -16,6 +16,7 @@ const userSchema = new Schema({
   isActive: { type: Boolean, default: true },
   disabledOn: { type: Date },
   carrerMigration: { type: Boolean },
+  post: [{ type: Types.ObjectId, ref: "Post" }],
 });
 
 const UserModel = model("User", userSchema);
