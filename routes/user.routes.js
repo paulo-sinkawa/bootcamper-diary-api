@@ -15,7 +15,7 @@ router.post("/signup", async (req, res) => {
 
     if (!password) {
       return res.status(400).json({
-        msg: "Password is required and must have at least 8 characters, uppercase and lowercase letters, numbers and special characters.",
+        msg: "A senha precisa ter no mínimo 8 caracteres, pelo menos uma letra maiúscula, uma minúscula, um número e caractere especial.",
       });
     }
 
@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
     const user = await UserModel.findOne({ email: email });
 
     if (!user) {
-      return res.status(400).json({ msg: "Wrong password or email." });
+      return res.status(400).json({ msg: "E-mail ou senha não conferem" });
     }
 
     if (await bcrypt.compare(password, user.passwordHash)) {
@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
         user: { ...user._doc },
       });
     } else {
-      return res.status(400).json({ msg: "Wrong password or email." });
+      return res.status(400).json({ msg: "E-mail ou senha não conferem" });
     }
   } catch (error) {
     console.log(error);
