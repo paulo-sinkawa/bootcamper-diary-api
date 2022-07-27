@@ -5,9 +5,11 @@ const isAuth = require("../middlewares/isAuth");
 
 router.post("/create", isAuth, attachCurrentUser, async (req, res) => {
   try {
+    const loggedInUser = req.currentUser;
+    console.log(loggedInUser._id);
     const createdPost = await PostModel.create({
       ...req.body,
-      owner: req.currentUser._id,
+      owner: loggedInUser._id,
     });
     return res.status(201).json(createdPost);
   } catch (err) {
@@ -18,7 +20,7 @@ router.post("/create", isAuth, attachCurrentUser, async (req, res) => {
 
 router.get("/all-posts", async (req, res) => {
   try {
-    const getAllPosts = await PostModel.find();
+    const getAllPosts = await PostModel.find().populate("owner");
     return res.status(200).json(getAllPosts);
   } catch (err) {
     console.error(err);
@@ -29,7 +31,9 @@ router.get("/all-posts", async (req, res) => {
 router.get("/my-posts/:id", isAuth, attachCurrentUser, async (req, res) => {
   const { id } = req.params;
   try {
-    const foundPost = await PostModel.findOne({ _id: id }).populate("comment");
+    const foundPost = await PostModel.findOne({ _id: id })
+      .populate("comment")
+      .populate("owner");
     return res.status(200).json(foundPost);
   } catch (err) {
     console.error(err);
