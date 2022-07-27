@@ -18,7 +18,7 @@ router.post("/create/:postId", isAuth, attachCurrentUser, async (req, res) => {
       { new: true }
     );
 
-    return res.status(201).json({ createdComment, editedPost });
+    return res.status(201).json({ createdComment });
   } catch (err) {
     console.error(err);
     return res.status(500).json(err);

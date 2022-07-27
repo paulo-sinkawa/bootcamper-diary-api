@@ -20,7 +20,7 @@ router.post("/create", isAuth, attachCurrentUser, async (req, res) => {
 
 router.get("/all-posts", async (req, res) => {
   try {
-    const getAllPosts = await PostModel.find().populate("owner");
+    const getAllPosts = await PostModel.find().populate("owner", "comment");
     return res.status(200).json(getAllPosts);
   } catch (err) {
     console.error(err);
@@ -31,9 +31,10 @@ router.get("/all-posts", async (req, res) => {
 router.get("/my-posts/:id", isAuth, attachCurrentUser, async (req, res) => {
   const { id } = req.params;
   try {
-    const foundPost = await PostModel.findOne({ _id: id })
-      .populate("comment")
-      .populate("owner");
+    const foundPost = await PostModel.findOne({ _id: id }).populate(
+      "comment",
+      "owner"
+    );
     return res.status(200).json(foundPost);
   } catch (err) {
     console.error(err);
