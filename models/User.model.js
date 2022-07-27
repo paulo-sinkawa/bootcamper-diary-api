@@ -11,7 +11,11 @@ const userSchema = new Schema({
   },
   passwordHash: { type: String, required: true },
   age: { type: Number, required: true },
-  img: { type: String },
+  img: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/paulosinkawa/image/upload/v1658955736/img-folder/file_dhmxgo.png",
+  },
   role: { type: String, enum: ["ADMIN", "USER"], default: "USER" },
   isActive: { type: Boolean, default: true },
   disabledOn: { type: Date },
