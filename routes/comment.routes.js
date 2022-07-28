@@ -35,6 +35,22 @@ router.get("/all-comments", async (req, res) => {
   }
 });
 
+router.get(
+  "/my-comment/:commentId",
+  isAuth,
+  attachCurrentUser,
+  async (req, res) => {
+    const { commentId } = req.params;
+    try {
+      const foundComment = await CommentModel.findOne({ _id: commentId });
+      return res.status(200).json(foundComment);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
 router.patch(
   "/edit/:postId/:commentId",
   isAuth,
